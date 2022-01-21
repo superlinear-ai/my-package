@@ -1,0 +1,27 @@
+{
+  "template": "git@github.com:radix-ai/poetry-cookiecutter.git",
+  "commit": "f7fc7651a1d460fdc65be71b9e5a488114a49cca",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "package_name": "My Package",
+      "package_description": "A Python package that demos Poetry Cookiecutter.",
+      "package_url": "https://github.com/radix-ai/my-package",
+      "author_name": "Laurent Sorber",
+      "author_email": "laurent@radix.ai",
+      "with_fastapi_api": "1",
+      "with_jupyter_lab": "0",
+      "with_pydantic_typing": "1",
+      "with_streamlit_app": "0",
+      "with_typer_cli": "1",
+      "continuous_integration": "GitHub",
+      "sentry_dsn": "",
+      "sentry_org": "",
+      "sentry_project": "",
+      "private_package_repository_name": "",
+      "private_package_repository_url": "",
+      "_template": "git@github.com:radix-ai/poetry-cookiecutter.git"
+    }
+  },
+  "directory": null
+}
