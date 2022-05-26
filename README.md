@@ -1,6 +1,6 @@
 # My Package
 
-A Python package that demos Poetry Cookiecutter.
+An example of a Python package that was generated with [Poetry Cookiecutter](https://github.com/radix-ai/poetry-cookiecutter).
 
 ## Using
 
