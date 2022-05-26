@@ -1,6 +1,6 @@
 {
-  "template": "git@github.com:radix-ai/poetry-cookiecutter.git",
-  "commit": "f7fc7651a1d460fdc65be71b9e5a488114a49cca",
+  "template": "git@github.com:radix-ai/poetry-cookiecutter",
+  "commit": "72a94b4c83684342a449b49a194aa2eb8cc543cf",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -9,18 +9,17 @@
       "package_url": "https://github.com/radix-ai/my-package",
       "author_name": "Laurent Sorber",
       "author_email": "laurent@radix.ai",
+      "python_version": "3.8",
       "with_fastapi_api": "1",
       "with_jupyter_lab": "0",
       "with_pydantic_typing": "1",
+      "with_sentry_logging": "0",
       "with_streamlit_app": "0",
       "with_typer_cli": "1",
       "continuous_integration": "GitHub",
-      "sentry_dsn": "",
-      "sentry_org": "",
-      "sentry_project": "",
       "private_package_repository_name": "",
       "private_package_repository_url": "",
-      "_template": "git@github.com:radix-ai/poetry-cookiecutter.git"
+      "_template": "git@github.com:radix-ai/poetry-cookiecutter"
     }
   },
   "directory": null
