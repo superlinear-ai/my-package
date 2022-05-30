@@ -1,10 +1,11 @@
 # My Package
 
-An example of a Python package that was generated with [Poetry Cookiecutter](https://github.com/radix-ai/poetry-cookiecutter).
+An example of a Python package and app that was scaffolded with [Poetry Cookiecutter](https://github.com/radix-ai/poetry-cookiecutter).
 
 ## Using
 
-To serve this package, run `docker-compose up app`.
+To serve this app, run `docker compose up app` and open [localhost:8000](http://localhost:8000) in your browser.
+
 
 ## Contributing
 
@@ -33,7 +34,7 @@ To serve this package, run `docker-compose up app`.
 <summary>Setup: once per project</summary>
 
 1. Clone this repository.
-1. Open the cloned repository in VS Code and run <kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> > _Remote-Containers: Reopen in Container_ to start a [Development Container](https://code.visualstudio.com/docs/remote/containers). Alternatively, open the cloned repository in PyCharm and [configure Docker Compose as a remote interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote).
+1. Open the cloned repository in VS Code and run <kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Remote-Containers: Reopen in Container_ to start a [Dev Container](https://code.visualstudio.com/docs/remote/containers). Alternatively, open the cloned repository in PyCharm and [configure Docker Compose as a remote interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote).
 
 </details>
 
@@ -42,7 +43,7 @@ To serve this package, run `docker-compose up app`.
 
 - This project follows the [Conventional Commits](https://www.conventionalcommits.org/) standard to automate [Semantic Versioning](https://semver.org/) and [Keep A Changelog](https://keepachangelog.com/) with [Commitizen](https://github.com/commitizen-tools/commitizen).
 - Run `poe` from within the development environment to print a list of [Poe the Poet](https://github.com/nat-n/poethepoet) tasks available to run on this project.
-- Run `poetry add {package}` from within the development environment to install a run time dependency and add it to `pyproject.toml` and `poetry.lock`. Add `--group dev` if you only need the package for local development, or `--group test` if you only need the package for linting or testing.
+- Run `poetry add {package}` from within the development environment to install a run time dependency and add it to `pyproject.toml` and `poetry.lock`.
 - Run `poetry remove {package}` from within the development environment to uninstall a run time dependency and remove it from `pyproject.toml` and `poetry.lock`.
 - Run `poetry update` from within the development environment to upgrade all dependencies to the latest versions allowed by `pyproject.toml`.
 - Run `cz bump` to bump the package's version, update the `CHANGELOG.md`, and create a git tag.

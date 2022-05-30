@@ -16,25 +16,23 @@ services:
     environment:
       - POETRY_PYPI_TOKEN_PYPI
       - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
-    hostname: "my-package-dev.local"
     ports:
-      - "8000"
-    expose:
       - "8000"
     volumes:
       - .:/app/:cached
       - ~/.gitconfig:/etc/gitconfig:cached
       - ${SSH_AGENT_AUTH_SOCK:-/run/host-services/ssh-auth.sock}:/run/host-services/ssh-auth.sock:cached
       - ~/.ssh/known_hosts:/root/.ssh/known_hosts:cached
+      - app-env:/opt/app-env/
   app:
     build:
       context: .
       target: app
     tty: true
-    hostname: "my-package.local"
     ports:
-      - "8000"
-    expose:
-      - "8000"
+      - "8000:8000"
     profiles:
       - app
+
+volumes:
+  app-env:
