@@ -4,8 +4,11 @@ An example of a Python package and app that was scaffolded with [Poetry Cookiecu
 
 ## Using
 
-To serve this app, run `docker compose up app` and open [localhost:8000](http://localhost:8000) in your browser.
+To add and install this package as a dependency of your project, run `poetry add my-package`.
 
+To view this app's commands once it's installed, run `my-package --help`. Alternatively, you can also use `docker compose run --rm app --help`.
+
+To serve this app, run `docker compose up app` and open [localhost:8000](http://localhost:8000) in your browser. Within the Dev Container, this is equivalent to running `poe serve`.
 
 ## Contributing
 
