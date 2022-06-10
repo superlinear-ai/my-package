@@ -5,13 +5,14 @@ services:
     build:
       context: .
       target: dev
+    stdin_open: true
     tty: true
     entrypoint: []
     command:
       [
         "sh",
         "-c",
-        "cp --update /var/lib/poetry/poetry.lock /app/ && mkdir -p /app/.git/hooks/ && cp --update /var/lib/git/* /app/.git/hooks/ && sleep infinity"
+        "cp --update /var/lib/poetry/poetry.lock /app/ && mkdir -p /app/.git/hooks/ && cp --update /var/lib/git/* /app/.git/hooks/ && zsh"
       ]
     environment:
       - POETRY_PYPI_TOKEN_PYPI
@@ -19,11 +20,13 @@ services:
     ports:
       - "8000"
     volumes:
-      - .:/app/:cached
-      - ~/.gitconfig:/etc/gitconfig:cached
-      - ${SSH_AGENT_AUTH_SOCK:-/run/host-services/ssh-auth.sock}:/run/host-services/ssh-auth.sock:cached
-      - ~/.ssh/known_hosts:/root/.ssh/known_hosts:cached
+      - .:/app/
       - app-env:/opt/app-env/
+      - ~/.gitconfig:/etc/gitconfig
+      - ~/.ssh/known_hosts:/root/.ssh/known_hosts
+      - ${SSH_AGENT_AUTH_SOCK:-/run/host-services/ssh-auth.sock}:/run/host-services/ssh-auth.sock
+    profiles:
+      - dev
   app:
     build:
       context: .
@@ -31,8 +34,6 @@ services:
     tty: true
     ports:
       - "8000:8000"
-    profiles:
-      - app
 
 volumes:
   app-env:
