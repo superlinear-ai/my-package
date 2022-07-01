@@ -737,7 +737,7 @@ python-versions = ">=2.6"
 
 [[package]]
 name = "pdoc"
-version = "11.2.0"
+version = "12.0.2"
 description = "API Documentation for Python Projects"
 category = "dev"
 optional = false
@@ -1369,7 +1369,7 @@ python-versions = ">=3.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "dc81cf8754281f9c61c72b3d4ccee5fe571b9c223a8e48a9a18de75157b43f80"
+content-hash = "2005ac33e36baf0fcc143f31922fe8a0cde215962e540fffa39437b58299d602"
 
 [metadata.files]
 anyio = [
@@ -1775,8 +1775,8 @@ pbr = [
     {file = "pbr-5.9.0.tar.gz", hash = "sha256:e8dca2f4b43560edef58813969f52a56cef023146cbb8931626db80e6c1c4308"},
 ]
 pdoc = [
-    {file = "pdoc-11.2.0-py3-none-any.whl", hash = "sha256:f10f564e4fef89e21524f517a4b24ff949b91dc7b64dabd31c3543280a2637ea"},
-    {file = "pdoc-11.2.0.tar.gz", hash = "sha256:ab2e731efa6efe871be2e687b40db178301f0f57a71e3866b11487c6cb072f4c"},
+    {file = "pdoc-12.0.2-py3-none-any.whl", hash = "sha256:761a096b4dbc586c80d6b37baebf21ef467f22d6ea0532c3d5834abdb27c9862"},
+    {file = "pdoc-12.0.2.tar.gz", hash = "sha256:c63dc9050ec24b6baed6864a7d460814c620d3adbaee51c04b74eaa174b97dc6"},
 ]
 pep8-naming = [
     {file = "pep8-naming-0.12.1.tar.gz", hash = "sha256:bb2455947757d162aa4cad55dba4ce029005cd1692f2899a21d51d8630ca7841"},

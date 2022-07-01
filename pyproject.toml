@@ -55,7 +55,7 @@ flake8-tidy-imports = "^4.7.0"
 flake8-use-fstring = "^1.3"
 isort = "^5.10.1"
 mypy = "^0.950"
-pdoc = "^11.2.0"
+pdoc = "^12.0.2"
 pep8-naming = "^0.12.1"
 pre-commit = "^2.19.0"
 pydocstyle = { extras = ["toml"], version = "^6.1.1" }
