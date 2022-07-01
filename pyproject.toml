@@ -38,7 +38,7 @@ uvicorn = { extras = ["standard"], version = "^0.17.6" }
 # https://python-poetry.org/docs/master/managing-dependencies/
 # TODO: Split in `tool.poetry.group.dev` and `tool.poetry.group.test` when Poetry 1.2.0 is released.
 [tool.poetry.dev-dependencies]
-black = "^22.3.0"
+black = "^22.6.0"
 commitizen = "^2.24.0"
 coverage = { extras = ["toml"], version = "^6.3.2" }
 cruft = "^2.10.2"
