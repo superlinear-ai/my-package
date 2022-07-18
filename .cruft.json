@@ -1,6 +1,6 @@
 {
   "template": "git@github.com:radix-ai/poetry-cookiecutter",
-  "commit": "36594707c25ce641b6761aebc764cf7bb9fe989a",
+  "commit": "29e28fd85f6e85cda25d012aabf9a45175e58eeb",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -17,6 +17,7 @@
       "with_streamlit_app": "0",
       "with_typer_cli": "1",
       "continuous_integration": "GitHub",
+      "docstring_style": "NumPy",
       "private_package_repository_name": "",
       "private_package_repository_url": "",
       "_template": "git@github.com:radix-ai/poetry-cookiecutter"

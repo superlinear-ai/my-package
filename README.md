@@ -1,4 +1,4 @@
-# My Package
+# 🍿 My Package
 
 An example of a Python package and app that was scaffolded with [Poetry Cookiecutter](https://github.com/radix-ai/poetry-cookiecutter).
 
