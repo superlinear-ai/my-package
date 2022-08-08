@@ -29,22 +29,23 @@ my-package = "my_package.cli:app"
 coloredlogs = "^15.0.1"
 fastapi = "^0.78.0"
 gunicorn = "^20.1.0"
-poethepoet = "^0.14.0"
+poethepoet = "^0.16.0"
 pydantic = "^1.9.1"
 python = "^3.8"
-typer = "^0.4.1"
+typer = { extras = ["all"], version = "^0.6.1" }
 uvicorn = { extras = ["standard"], version = "^0.18.2" }
 
 # https://python-poetry.org/docs/master/managing-dependencies/
 # TODO: Split in `tool.poetry.group.dev` and `tool.poetry.group.test` when Poetry 1.2.0 is released.
 [tool.poetry.dev-dependencies]
+absolufy-imports = "^0.3.1"
+bandit = { extras = ["toml"], version = "^1.7.4" }
 black = "^22.6.0"
 commitizen = "^2.27.1"
 coverage = { extras = ["toml"], version = "^6.4.1" }
-cruft = "^2.10.2"
+cruft = "^2.11.0"
 darglint = "^1.8.1"
-flake8 = "^4.0.1"
-flake8-bandit = "^3.0.0"
+flake8 = "^5.0.4"
 flake8-bugbear = "^22.6.22"
 flake8-comprehensions = "^3.10.0"
 flake8-mutable = "^1.2.0"
@@ -52,7 +53,6 @@ flake8-print = "^5.0.0"
 flake8-pytest-style = "^1.6.0"
 flake8-rst-docstrings = "^0.2.6"
 flake8-tidy-imports = "^4.8.0"
-flake8-use-fstring = "^1.3"
 isort = "^5.10.1"
 mypy = "^0.961"
 pdoc = "^12.0.2"
@@ -64,8 +64,14 @@ pytest-clarity = "^1.0.1"
 pytest-mock = "^3.8.1"
 pytest-xdist = "^2.5.0"
 pyupgrade = "^2.34.0"
-safety = "^1.10.3"
+safety = "^2.1.1"
 shellcheck-py = "^0.8.0"
+typeguard = "^2.13.3"
+yesqa = "^1.4.0"
+
+# https://bandit.readthedocs.io/en/latest/config.html
+[tool.bandit]
+skips = ["B101"]
 
 # https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file
 [tool.black]
@@ -74,14 +80,14 @@ line-length = 100
 # https://coverage.readthedocs.io/en/latest/config.html#report
 [tool.coverage.report]
 fail_under = 50
-precision = 2
+precision = 1
 show_missing = true
 skip_covered = true
 
 # https://coverage.readthedocs.io/en/latest/config.html#run
 [tool.coverage.run]
 branch = true
-command_line = "--module pytest src tests"
+command_line = "--module pytest"
 data_file = "reports/.coverage"
 source = ["src"]
 
@@ -89,11 +95,12 @@ source = ["src"]
 [tool.coverage.xml]
 output = "reports/coverage.xml"
 
-# https://pycqa.github.io/isort/docs/configuration/profiles/
+# https://pycqa.github.io/isort/docs/configuration/options.html
 [tool.isort]
-known_first_party = "tests"
+color_output = true
 line_length = 100
 profile = "black"
+src_paths = ["src", "tests"]
 
 # https://mypy.readthedocs.io/en/latest/config_file.html
 [tool.mypy]
@@ -120,11 +127,12 @@ warn_untyped_fields = true
 [tool.pydocstyle]
 convention = "numpy"
 
-# https://docs.pytest.org/en/latest/customize.html#adding-default-options
+# https://docs.pytest.org/en/latest/reference/reference.html#ini-options-ref
 [tool.pytest.ini_options]
-addopts = "-W error -W ignore::DeprecationWarning --doctest-modules --exitfirst --failed-first --strict-config --strict-markers --verbosity=2 --junitxml=reports/pytest.xml"
-junit_family = "xunit2"
-testpaths = "tests"
+addopts = "--color=yes --doctest-modules --exitfirst --failed-first --strict-config --strict-markers --typeguard-packages=my_package --verbosity=2 --junitxml=reports/pytest.xml"
+filterwarnings = ["error", "ignore::DeprecationWarning"]
+testpaths = ["src", "tests"]
+xfail_strict = true
 
 # https://github.com/nat-n/poethepoet
 [tool.poe.tasks]
@@ -177,7 +185,7 @@ testpaths = "tests"
       """
 
     [[tool.poe.tasks.lint.sequence]]
-    shell = "safety check --full-report || true"
+    shell = "safety check --continue-on-error --full-report"
 
   [tool.poe.tasks.serve]
   help = "Serve a REST API in production"
@@ -194,6 +202,7 @@ testpaths = "tests"
       --workers 2
       my_package.api:app
     """
+  use_exec = true
 
     [[tool.poe.tasks.serve.args]]
     help = "Bind socket to this port (default: 8000)"

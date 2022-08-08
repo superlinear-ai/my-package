@@ -27,7 +27,15 @@ To serve this app, run `docker compose up app` and open [localhost:8000](http://
     ```
 1. [Install Docker Desktop](https://www.docker.com/get-started).
     - Enable _Use Docker Compose V2_ in Docker Desktop's preferences window.
-    - If you are using Linux, you must [configure Docker and Docker Compose to use the BuildKit build system](https://pythonspeed.com/articles/docker-buildkit/). On macOS and Windows, BuildKit is enabled by default in Docker Desktop.
+    - _Linux only_:
+        - [Configure Docker and Docker Compose to use the BuildKit build system](https://docs.docker.com/develop/develop-images/build_enhancements/#to-enable-buildkit-builds). On macOS and Windows, BuildKit is enabled by default in Docker Desktop.
+        - Export your user's user id and group id so that [files created in the Dev Container are owned by your user](https://github.com/moby/moby/issues/3206):
+            ```sh
+            cat << EOF >> ~/.bashrc
+            export UID=$(id --user)
+            export GID=$(id --group)
+            EOF
+            ```
 1. [Install VS Code](https://code.visualstudio.com/) and [VS Code's Remote-Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers). Alternatively, install [PyCharm](https://www.jetbrains.com/pycharm/download/).
     - _Optional:_ Install a [Nerd Font](https://www.nerdfonts.com/font-downloads) such as [FiraCode Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode) with `brew tap homebrew/cask-fonts && brew install --cask font-fira-code-nerd-font` and [configure VS Code](https://github.com/tonsky/FiraCode/wiki/VS-Code-Instructions) or [configure PyCharm](https://github.com/tonsky/FiraCode/wiki/Intellij-products-instructions) to use `'FiraCode Nerd Font'`.
 
@@ -37,8 +45,8 @@ To serve this app, run `docker compose up app` and open [localhost:8000](http://
 <summary>Setup: once per project</summary>
 
 1. Clone this repository.
-1. Start a [Dev Container](https://code.visualstudio.com/docs/remote/containers) in your preferred development environment:
-    - _VS Code_: open the cloned repository and run <kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Remote-Containers: Reopen in Container_.
+2. Start a [Dev Container](https://code.visualstudio.com/docs/remote/containers) in your preferred development environment:
+    - _VS Code_: open the cloned repository and run <kbd>Ctrl/⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Remote-Containers: Reopen in Container_.
     - _PyCharm_: open the cloned repository and [configure Docker Compose as a remote interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote).
     - _Terminal_: open the cloned repository and run `docker compose run --rm dev` to start an interactive Dev Container.
 
