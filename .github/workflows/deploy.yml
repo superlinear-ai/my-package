@@ -45,9 +45,6 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
-          build-args: |
-            SOURCE_BRANCH=${{ env.GITHUB_REF }}
-            SOURCE_COMMIT=${{ env.GITHUB_SHA }}
           context: .
           push: true
           tags: |

@@ -3,6 +3,9 @@ default_install_hook_types: [commit-msg, pre-commit]
 default_stages: [commit, manual]
 fail_fast: true
 repos:
+  - repo: meta
+    hooks:
+      - id: check-useless-excludes
   - repo: https://github.com/pre-commit/pygrep-hooks
     rev: v1.9.0
     hooks:
@@ -12,7 +15,6 @@ repos:
       - id: python-no-eval
       - id: python-no-log-warn
       - id: python-use-type-annotations
-      - id: python-check-blanket-noqa
       - id: rst-backticks
       - id: rst-directive-colons
       - id: rst-inline-touching-normal
@@ -34,24 +36,29 @@ repos:
       - id: check-xml
       - id: check-yaml
       - id: debug-statements
+      - id: destroyed-symlinks
       - id: detect-private-key
+      - id: end-of-file-fixer
+        types: [python]
       - id: fix-byte-order-marker
       - id: mixed-line-ending
+      - id: name-tests-test
+        args: [--pytest-test-first]
       - id: trailing-whitespace
-        types: [python]
-      - id: end-of-file-fixer
         types: [python]
   - repo: local
     hooks:
       - id: commitizen
         name: commitizen
-        entry: cz check --commit-msg-file
+        entry: cz check
+        args: [--commit-msg-file]
         require_serial: true
         language: system
         stages: [commit-msg]
       - id: pyupgrade
         name: pyupgrade
-        entry: pyupgrade --py38-plus
+        entry: pyupgrade
+        args: [--py38-plus]
         require_serial: true
         language: system
         types: [python]
@@ -81,12 +88,14 @@ repos:
         types: [python]
       - id: shellcheck
         name: shellcheck
-        entry: shellcheck --check-sourced
+        entry: shellcheck
+        args: [--check-sourced]
         language: system
         types: [shell]
       - id: bandit
         name: bandit
-        entry: bandit --configfile pyproject.toml
+        entry: bandit
+        args: [--configfile, pyproject.toml]
         language: system
         types: [python]
       - id: pydocstyle
@@ -104,6 +113,12 @@ repos:
         entry: poetry check
         language: system
         files: pyproject.toml
+        pass_filenames: false
+      - id: poetry-lock-check
+        name: poetry lock check
+        entry: poetry lock
+        args: [--check]
+        language: system
         pass_filenames: false
       - id: mypy
         name: mypy

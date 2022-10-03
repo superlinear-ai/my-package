@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1
-FROM python:3.8-slim AS base
+ARG PYTHON_VERSION=3.8
+FROM python:$PYTHON_VERSION-slim AS base
 
 # Configure Python to print tracebacks on crash [1], and to not buffer stdout and stderr [2].
 # [1] https://docs.python.org/3/using/cmdline.html#envvar-PYTHONFAULTHANDLER
@@ -8,9 +9,9 @@ ENV PYTHONFAULTHANDLER 1
 ENV PYTHONUNBUFFERED 1
 
 # Install Poetry.
-ENV POETRY_VERSION 1.1.13
+ENV POETRY_VERSION 1.2.0
 RUN --mount=type=cache,target=/root/.cache/ \
-    pip install poetry==$POETRY_VERSION
+    pip install poetry~=$POETRY_VERSION
 
 # Create and activate a virtual environment.
 RUN python -m venv /opt/app-env
@@ -31,13 +32,15 @@ WORKDIR /app/
 COPY poetry.lock* pyproject.toml /app/
 RUN --mount=type=cache,target=/root/.cache/ \
     mkdir -p src/my_package/ && touch src/my_package/__init__.py && touch README.md && \
-    poetry install --no-dev --no-interaction
+    poetry install --only main --no-interaction
 
 # Create a non-root user.
 ARG UID=1000
 ARG GID=$UID
 RUN groupadd --gid $GID app && \
     useradd --create-home --gid $GID --uid $UID app
+
+
 
 FROM base as ci
 
@@ -47,13 +50,15 @@ RUN --mount=type=cache,target=/var/cache/apt/ \
     apt-get update && \
     apt-get install --no-install-recommends --yes git
 
-# Install the development Python environment.
+# Install the CI Python environment.
 RUN --mount=type=cache,target=/root/.cache/ \
-    poetry install --no-interaction
+    poetry install --only main,test --no-interaction
 
 # Give the non-root user ownership and switch to the non-root user.
 RUN chown --recursive app /app/ /opt/
 USER app
+
+
 
 FROM base as dev
 
@@ -90,6 +95,8 @@ RUN echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
     echo 'HISTFILE=~/.zsh_history' >> ~/.zshrc && \
     zsh -c 'source ~/.zshrc'
 
+
+
 FROM base AS app
 
 # Copy the package source code to the working directory.
@@ -102,12 +109,3 @@ USER app
 # Expose the application.
 ENTRYPOINT ["/opt/app-env/bin/poe"]
 CMD ["serve"]
-
-# The following variables are supplied as build args at build time and made available at run time as
-# environment variables.
-ARG SOURCE_BRANCH
-ENV SOURCE_BRANCH $SOURCE_BRANCH
-ARG SOURCE_COMMIT
-ENV SOURCE_COMMIT $SOURCE_COMMIT
-ARG SOURCE_TIMESTAMP
-ENV SOURCE_TIMESTAMP $SOURCE_TIMESTAMP
