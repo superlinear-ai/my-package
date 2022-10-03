@@ -10,6 +10,7 @@
       "author_name": "Laurent Sorber",
       "author_email": "laurent@radix.ai",
       "python_version": "3.8",
+      "development_environment": "strict",
       "with_fastapi_api": "1",
       "with_jupyter_lab": "0",
       "with_pydantic_typing": "1",
