@@ -1,19 +1,16 @@
 {
     "name": "my-package",
     "dockerComposeFile": "../docker-compose.yml",
-    "service": "dev",
+    "service": "devcontainer",
     "workspaceFolder": "/app/",
     "overrideCommand": true,
     "postStartCommand": "cp --update /opt/build/poetry/poetry.lock /app/ && mkdir -p /app/.git/hooks/ && cp --update /opt/build/git/* /app/.git/hooks/",
     "customizations": {
         "vscode": {
             "extensions": [
-                "bungcip.better-toml",
-                "eamodio.gitlens",
-                "ms-azuretools.vscode-docker",
                 "ms-python.python",
-                "ms-python.vscode-pylance",
                 "ryanluker.vscode-coverage-gutters",
+                "tamasfe.even-better-toml",
                 "visualstudioexptteam.vscodeintellicode"
             ],
             "settings": {

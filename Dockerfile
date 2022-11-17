@@ -93,6 +93,8 @@ RUN echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
     echo 'antigen apply' >> ~/.zshrc && \
     echo 'eval "$(starship init zsh)"' >> ~/.zshrc && \
     echo 'HISTFILE=~/.zsh_history' >> ~/.zshrc && \
+    echo 'HISTSIZE=1000' >> ~/.zshrc && \
+    echo 'SAVEHIST=1000' >> ~/.zshrc && \
     zsh -c 'source ~/.zshrc'
 
 

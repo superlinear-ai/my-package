@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  dev:
+  devcontainer:
     build:
       context: .
       target: dev
@@ -9,6 +9,12 @@ services:
         PYTHON_VERSION: ${PYTHON_VERSION:-3.8}
         UID: ${UID:-1000}
         GID: ${GID:-1000}
+    environment:
+      - POETRY_PYPI_TOKEN_PYPI
+    volumes:
+      - .:/app/
+  dev:
+    extends: devcontainer
     stdin_open: true
     tty: true
     entrypoint: []
