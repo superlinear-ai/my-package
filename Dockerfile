@@ -9,14 +9,9 @@ ENV PYTHONFAULTHANDLER 1
 ENV PYTHONUNBUFFERED 1
 
 # Install Poetry.
-ENV POETRY_VERSION 1.2.0
-RUN --mount=type=cache,target=/root/.cache/ \
+ENV POETRY_VERSION 1.3.1
+RUN --mount=type=cache,target=/root/.cache/pip/ \
     pip install poetry~=$POETRY_VERSION
-
-# Create and activate a virtual environment.
-RUN python -m venv /opt/app-env
-ENV PATH /opt/app-env/bin:$PATH
-ENV VIRTUAL_ENV /opt/app-env
 
 # Install compilers that may be required for certain packages or platforms.
 RUN rm /etc/apt/apt.conf.d/docker-clean
@@ -25,53 +20,63 @@ RUN --mount=type=cache,target=/var/cache/apt/ \
     apt-get update && \
     apt-get install --no-install-recommends --yes build-essential
 
-# Set the working directory.
-WORKDIR /app/
-
-# Install the run time Python environment.
-COPY poetry.lock* pyproject.toml /app/
-RUN --mount=type=cache,target=/root/.cache/ \
-    mkdir -p src/my_package/ && touch src/my_package/__init__.py && touch README.md && \
-    poetry install --only main --no-interaction
-
-# Create a non-root user.
+# Create a non-root user and switch to it [1].
+# [1] https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
 ARG UID=1000
 ARG GID=$UID
 RUN groupadd --gid $GID app && \
-    useradd --create-home --gid $GID --uid $UID app
+    useradd --create-home --gid $GID --uid $UID app && \
+    chown app /opt/
+USER app
+
+# Create and activate a virtual environment.
+RUN python -m venv /opt/app-env
+ENV PATH /opt/app-env/bin:$PATH
+ENV VIRTUAL_ENV /opt/app-env
+
+# Set the working directory.
+WORKDIR /app/
+
+# Install the run time Python dependencies in the virtual environment.
+COPY poetry.lock* pyproject.toml /app/
+RUN mkdir -p /home/app/.cache/pypoetry/ && mkdir -p /home/app/.config/pypoetry/ && \
+    mkdir -p src/my_package/ && touch src/my_package/__init__.py && touch README.md
+RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
+    poetry install --only main --no-interaction
 
 
 
 FROM base as ci
 
 # Install git so we can run pre-commit.
+USER root
 RUN --mount=type=cache,target=/var/cache/apt/ \
     --mount=type=cache,target=/var/lib/apt/ \
     apt-get update && \
     apt-get install --no-install-recommends --yes git
-
-# Install the CI Python environment.
-RUN --mount=type=cache,target=/root/.cache/ \
-    poetry install --only main,test --no-interaction
-
-# Give the non-root user ownership and switch to the non-root user.
-RUN chown --recursive app /app/ /opt/
 USER app
+
+# Install the CI/CD Python dependencies in the virtual environment.
+RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
+    poetry install --only main,test --no-interaction
 
 
 
 FROM base as dev
 
 # Install development tools: compilers, curl, git, gpg, ssh, starship, sudo, vim, and zsh.
+USER root
 RUN --mount=type=cache,target=/var/cache/apt/ \
     --mount=type=cache,target=/var/lib/apt/ \
     apt-get update && \
     apt-get install --no-install-recommends --yes build-essential curl git gnupg ssh sudo vim zsh zsh-antigen && \
     sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
-    usermod --shell /usr/bin/zsh app
+    usermod --shell /usr/bin/zsh app && \
+    echo 'app ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/app && chmod 0440 /etc/sudoers.d/app
+USER app
 
-# Install the development Python environment.
-RUN --mount=type=cache,target=/root/.cache/ \
+# Install the development Python dependencies in the virtual environment.
+RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
     poetry install --no-interaction
 
 # Persist output generated during docker build so that we can restore it in the dev container.
@@ -79,12 +84,6 @@ COPY .pre-commit-config.yaml /app/
 RUN mkdir -p /opt/build/poetry/ && cp poetry.lock /opt/build/poetry/ && \
     git init && pre-commit install --install-hooks && \
     mkdir -p /opt/build/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /opt/build/git/
-
-# Give the non-root user ownership and switch to the non-root user.
-RUN chown --recursive app /app/ /opt/ && \
-    echo 'app ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/app && \
-    chmod 0440 /etc/sudoers.d/app
-USER app
 
 # Configure the non-root user's shell.
 RUN echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
@@ -103,10 +102,6 @@ FROM base AS app
 
 # Copy the package source code to the working directory.
 COPY . .
-
-# Give the non-root user ownership and switch to the non-root user.
-RUN chown --recursive app /app/ /opt/
-USER app
 
 # Expose the application.
 ENTRYPOINT ["/opt/app-env/bin/poe"]
