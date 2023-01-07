@@ -91,9 +91,10 @@ RUN echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
     echo 'antigen bundle zsh-users/zsh-autosuggestions' >> ~/.zshrc && \
     echo 'antigen apply' >> ~/.zshrc && \
     echo 'eval "$(starship init zsh)"' >> ~/.zshrc && \
-    echo 'HISTFILE=~/.zsh_history' >> ~/.zshrc && \
+    echo 'HISTFILE=~/.history/.zsh_history' >> ~/.zshrc && \
     echo 'HISTSIZE=1000' >> ~/.zshrc && \
     echo 'SAVEHIST=1000' >> ~/.zshrc && \
+    echo 'setopt share_history' >> ~/.zshrc && \
     zsh -c 'source ~/.zshrc'
 
 

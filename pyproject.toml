@@ -22,51 +22,33 @@ my-package = "my_package.cli:app"
 
 [tool.poetry.dependencies]  # https://python-poetry.org/docs/dependency-specification/
 coloredlogs = "^15.0.1"
-fastapi = "^0.78.0"
+fastapi = { extras = ["all"], version = "^0.88.0" }
 gunicorn = "^20.1.0"
-poethepoet = "^0.16.0"
-pydantic = "^1.9.1"
+poethepoet = "^0.17.1"
+pydantic = "^1.10.4"
 python = "^3.8"
-typer = { extras = ["all"], version = "^0.6.1" }
-uvicorn = { extras = ["standard"], version = "^0.18.2" }
+typer = { extras = ["all"], version = "^0.7.0" }
+uvicorn = { extras = ["standard"], version = "^0.20.0" }
 
 [tool.poetry.group.test.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
 absolufy-imports = "^0.3.1"
-bandit = { extras = ["toml"], version = "^1.7.4" }
-black = "^22.6.0"
-commitizen = "^2.27.1"
-coverage = { extras = ["toml"], version = "^6.4.1" }
-darglint = "^1.8.1"
-flake8 = "^5.0.4"
-flake8-bugbear = "^22.6.22"
-flake8-comprehensions = "^3.10.0"
-flake8-mutable = "^1.2.0"
-flake8-print = "^5.0.0"
-Flake8-pyproject = "^1.1.0"
-flake8-pytest-style = "^1.6.0"
-flake8-rst-docstrings = "^0.2.6"
-flake8-tidy-imports = "^4.8.0"
-isort = "^5.10.1"
-mypy = "^0.961"
-pep8-naming = "^0.13.0"
-pre-commit = "^2.19.0"
-pydocstyle = { extras = ["toml"], version = "^6.1.1" }
-pytest = "^7.1.2"
+black = "^22.12.0"
+commitizen = "^2.39.1"
+coverage = { extras = ["toml"], version = "^7.0.3" }
+mypy = "^0.991"
+pre-commit = "^2.21.0"
+pytest = "^7.2.0"
 pytest-clarity = "^1.0.1"
-pytest-mock = "^3.8.1"
-pytest-xdist = "^2.5.0"
-pyupgrade = "^2.34.0"
-safety = "^2.1.1"
-shellcheck-py = "^0.8.0"
+pytest-mock = "^3.10.0"
+pytest-xdist = "^3.1.0"
+ruff = "^0.0.213"
+safety = "^2.3.5"
+shellcheck-py = "^0.9.0"
 typeguard = "^2.13.3"
-yesqa = "^1.4.0"
 
 [tool.poetry.group.dev.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
-cruft = "^2.11.0"
-pdoc = "^12.0.2"
-
-[tool.bandit]  # https://bandit.readthedocs.io/en/latest/config.html
-skips = ["B101"]
+cruft = "^2.12.0"
+pdoc = "^12.3.0"
 
 [tool.black]  # https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file
 line-length = 100
@@ -87,21 +69,6 @@ source = ["src"]
 [tool.coverage.xml]  # https://coverage.readthedocs.io/en/latest/config.html#xml
 output = "reports/coverage.xml"
 
-[tool.flake8]  # https://flake8.pycqa.org/en/latest/user/options.html#options-and-their-descriptions
-color = "always"
-docstring_style = "numpy"
-doctests = true
-ignore = ["DAR103", "E203", "E501", "W503"]
-max_line_length = 100
-max_complexity = 10
-strictness = "short"
-
-[tool.isort]  # https://pycqa.github.io/isort/docs/configuration/options.html
-color_output = true
-line_length = 100
-profile = "black"
-src_paths = ["src", "tests"]
-
 [tool.mypy]  # https://mypy.readthedocs.io/en/latest/config_file.html
 junit_xml = "reports/mypy.xml"
 plugins = "pydantic.mypy"
@@ -121,14 +88,21 @@ init_typed = true
 warn_required_dynamic_aliases = true
 warn_untyped_fields = true
 
-[tool.pydocstyle]  # http://www.pydocstyle.org/en/latest/usage.html#configuration-files
-convention = "numpy"
-
 [tool.pytest.ini_options]  # https://docs.pytest.org/en/latest/reference/reference.html#ini-options-ref
 addopts = "--color=yes --doctest-modules --exitfirst --failed-first --strict-config --strict-markers --typeguard-packages=my_package --verbosity=2 --junitxml=reports/pytest.xml"
 filterwarnings = ["error", "ignore::DeprecationWarning"]
 testpaths = ["src", "tests"]
 xfail_strict = true
+
+[tool.ruff]  # https://github.com/charliermarsh/ruff
+fix = true
+ignore-init-module-imports = true
+line-length = 100
+select = ["A", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "ERA", "F", "I", "ISC", "N", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "RET", "RUF", "S", "SIM", "T10", "T20", "TID", "UP", "W", "YTT"]
+ignore = ["E501", "PGH001", "S101"]
+extend-ignore = ["D107", "D203", "D212", "D213", "D402", "D413", "D415", "D416", "D417"]
+src = ["src", "tests"]
+target-version = "py38"
 
 [tool.poe.tasks]  # https://github.com/nat-n/poethepoet
 
