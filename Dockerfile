@@ -38,7 +38,7 @@ ENV VIRTUAL_ENV /opt/app-env
 WORKDIR /app/
 
 # Install the run time Python dependencies in the virtual environment.
-COPY poetry.lock* pyproject.toml /app/
+COPY --chown=app:app poetry.lock* pyproject.toml /app/
 RUN mkdir -p /home/app/.cache/pypoetry/ && mkdir -p /home/app/.config/pypoetry/ && \
     mkdir -p src/my_package/ && touch src/my_package/__init__.py && touch README.md
 RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
@@ -48,16 +48,17 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
 
 FROM base as ci
 
-# Install git so we can run pre-commit.
+# Allow CI to run as root.
 USER root
+
+# Install git so we can run pre-commit.
 RUN --mount=type=cache,target=/var/cache/apt/ \
     --mount=type=cache,target=/var/lib/apt/ \
     apt-get update && \
     apt-get install --no-install-recommends --yes git
-USER app
 
 # Install the CI/CD Python dependencies in the virtual environment.
-RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
+RUN --mount=type=cache,target=/root/.cache/pypoetry/ \
     poetry install --only main,test --no-interaction
 
 
@@ -80,7 +81,7 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
     poetry install --no-interaction
 
 # Persist output generated during docker build so that we can restore it in the dev container.
-COPY .pre-commit-config.yaml /app/
+COPY --chown=app:app .pre-commit-config.yaml /app/
 RUN mkdir -p /opt/build/poetry/ && cp poetry.lock /opt/build/poetry/ && \
     git init && pre-commit install --install-hooks && \
     mkdir -p /opt/build/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /opt/build/git/
@@ -102,7 +103,7 @@ RUN echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
 FROM base AS app
 
 # Copy the package source code to the working directory.
-COPY . .
+COPY --chown=app:app . .
 
 # Expose the application.
 ENTRYPOINT ["/opt/app-env/bin/poe"]

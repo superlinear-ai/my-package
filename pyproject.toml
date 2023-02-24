@@ -41,7 +41,7 @@ pytest = "^7.2.0"
 pytest-clarity = "^1.0.1"
 pytest-mock = "^3.10.0"
 pytest-xdist = "^3.1.0"
-ruff = "^0.0.213"
+ruff = "^0.0.223"
 safety = "^2.3.5"
 shellcheck-py = "^0.9.0"
 typeguard = "^2.13.3"
@@ -99,28 +99,58 @@ fix = true
 ignore-init-module-imports = true
 line-length = 100
 select = ["A", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "ERA", "F", "I", "ISC", "N", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "RET", "RUF", "S", "SIM", "T10", "T20", "TID", "UP", "W", "YTT"]
-ignore = ["E501", "PGH001", "S101"]
-extend-ignore = ["D107", "D203", "D212", "D213", "D402", "D413", "D415", "D416", "D417"]
+ignore = ["E501", "PGH001", "RET504", "S101"]
+unfixable = ["ERA001", "F401", "F841", "T201", "T203"]
 src = ["src", "tests"]
 target-version = "py38"
 
+[tool.ruff.pydocstyle]
+convention = "numpy"
+
 [tool.poe.tasks]  # https://github.com/nat-n/poethepoet
 
-  [tool.poe.tasks.dev]
-  help = "Serve a REST API in development"
-  cmd = """
-    uvicorn
-      --host 0.0.0.0
-      --port $port
-      --reload
-      my_package.api:app
+  [tool.poe.tasks.api]
+  help = "Serve a REST API"
+  shell = """
+    if [ $dev ]
+    then {
+      uvicorn \
+        --host $host \
+        --port $port \
+        --reload \
+        my_package.api:app
+    } else {
+      gunicorn \
+        --access-logfile - \
+        --bind $host:$port \
+        --graceful-timeout 10 \
+        --keep-alive 10 \
+        --log-file - \
+        --timeout 30 \
+        --worker-class uvicorn.workers.UvicornWorker \
+        --worker-tmp-dir /dev/shm \
+        --workers 2 \
+        my_package.api:app
+    } fi
     """
 
-    [[tool.poe.tasks.dev.args]]
+    [[tool.poe.tasks.api.args]]
+    help = "Bind socket to this host (default: 0.0.0.0)"
+    name = "host"
+    options = ["--host"]
+    default = "0.0.0.0"
+
+    [[tool.poe.tasks.api.args]]
     help = "Bind socket to this port (default: 8000)"
     name = "port"
     options = ["--port"]
     default = "8000"
+
+    [[tool.poe.tasks.api.args]]
+    help = "Enable development mode"
+    type = "boolean"
+    name = "dev"
+    options = ["--dev"]
 
   [tool.poe.tasks.docs]
   help = "Generate this package's docs"
@@ -155,29 +185,6 @@ target-version = "py38"
 
     [[tool.poe.tasks.lint.sequence]]
     shell = "safety check --continue-on-error --full-report"
-
-  [tool.poe.tasks.serve]
-  help = "Serve a REST API in production"
-  cmd = """
-    gunicorn
-      --access-logfile -
-      --bind 0.0.0.0:$port
-      --graceful-timeout 10
-      --keep-alive 10
-      --log-file -
-      --timeout 30
-      --worker-class uvicorn.workers.UvicornWorker
-      --worker-tmp-dir /dev/shm
-      --workers 2
-      my_package.api:app
-    """
-  use_exec = true
-
-    [[tool.poe.tasks.serve.args]]
-    help = "Bind socket to this port (default: 8000)"
-    name = "port"
-    options = ["--port"]
-    default = "8000"
 
   [tool.poe.tasks.test]
   help = "Test this package"
