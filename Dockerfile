@@ -112,4 +112,4 @@ COPY --chown=user:user . .
 
 # Expose the application.
 ENTRYPOINT ["/opt/my-package-env/bin/poe"]
-CMD ["serve"]
+CMD ["api"]
