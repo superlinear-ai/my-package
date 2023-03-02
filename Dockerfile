@@ -24,24 +24,24 @@ RUN --mount=type=cache,target=/var/cache/apt/ \
 # [1] https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
 ARG UID=1000
 ARG GID=$UID
-RUN groupadd --gid $GID app && \
-    useradd --create-home --gid $GID --uid $UID app && \
-    chown app /opt/
-USER app
+RUN groupadd --gid $GID user && \
+    useradd --create-home --gid $GID --uid $UID user && \
+    chown user /opt/
+USER user
 
 # Create and activate a virtual environment.
-RUN python -m venv /opt/app-env
-ENV PATH /opt/app-env/bin:$PATH
-ENV VIRTUAL_ENV /opt/app-env
+RUN python -m venv /opt/my-package-env
+ENV PATH /opt/my-package-env/bin:$PATH
+ENV VIRTUAL_ENV /opt/my-package-env
 
 # Set the working directory.
-WORKDIR /app/
+WORKDIR /workspaces/my-package/
 
 # Install the run time Python dependencies in the virtual environment.
-COPY --chown=app:app poetry.lock* pyproject.toml /app/
-RUN mkdir -p /home/app/.cache/pypoetry/ && mkdir -p /home/app/.config/pypoetry/ && \
+COPY --chown=user:user poetry.lock* pyproject.toml /workspaces/my-package/
+RUN mkdir -p /home/user/.cache/pypoetry/ && mkdir -p /home/user/.config/pypoetry/ && \
     mkdir -p src/my_package/ && touch src/my_package/__init__.py && touch README.md
-RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
+RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
     poetry install --only main --no-interaction
 
 
@@ -70,32 +70,37 @@ USER root
 RUN --mount=type=cache,target=/var/cache/apt/ \
     --mount=type=cache,target=/var/lib/apt/ \
     apt-get update && \
-    apt-get install --no-install-recommends --yes build-essential curl git gnupg ssh sudo vim zsh zsh-antigen && \
+    apt-get install --no-install-recommends --yes build-essential curl git gnupg ssh sudo vim zsh && \
     sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
-    usermod --shell /usr/bin/zsh app && \
-    echo 'app ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/app && chmod 0440 /etc/sudoers.d/app
-USER app
+    usermod --shell /usr/bin/zsh user && \
+    echo 'user ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/user && chmod 0440 /etc/sudoers.d/user
+USER user
 
 # Install the development Python dependencies in the virtual environment.
-RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/app/.cache/pypoetry/ \
+RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
     poetry install --no-interaction
 
 # Persist output generated during docker build so that we can restore it in the dev container.
-COPY --chown=app:app .pre-commit-config.yaml /app/
+COPY --chown=user:user .pre-commit-config.yaml /workspaces/my-package/
 RUN mkdir -p /opt/build/poetry/ && cp poetry.lock /opt/build/poetry/ && \
     git init && pre-commit install --install-hooks && \
     mkdir -p /opt/build/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /opt/build/git/
 
 # Configure the non-root user's shell.
-RUN echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
-    echo 'antigen bundle zsh-users/zsh-syntax-highlighting' >> ~/.zshrc && \
-    echo 'antigen bundle zsh-users/zsh-autosuggestions' >> ~/.zshrc && \
-    echo 'antigen apply' >> ~/.zshrc && \
+ENV ANTIDOTE_VERSION 1.8.1
+RUN git clone --branch v$ANTIDOTE_VERSION --depth=1 https://github.com/mattmc3/antidote.git ~/.antidote/ && \
+    echo 'zsh-users/zsh-syntax-highlighting' >> ~/.zsh_plugins.txt && \
+    echo 'zsh-users/zsh-autosuggestions' >> ~/.zsh_plugins.txt && \
+    echo 'source ~/.antidote/antidote.zsh' >> ~/.zshrc && \
+    echo 'antidote load' >> ~/.zshrc && \
     echo 'eval "$(starship init zsh)"' >> ~/.zshrc && \
     echo 'HISTFILE=~/.history/.zsh_history' >> ~/.zshrc && \
     echo 'HISTSIZE=1000' >> ~/.zshrc && \
     echo 'SAVEHIST=1000' >> ~/.zshrc && \
     echo 'setopt share_history' >> ~/.zshrc && \
+    echo 'bindkey "^[[A" history-beginning-search-backward' >> ~/.zshrc && \
+    echo 'bindkey "^[[B" history-beginning-search-forward' >> ~/.zshrc && \
+    mkdir ~/.history/ && \
     zsh -c 'source ~/.zshrc'
 
 
@@ -103,8 +108,8 @@ RUN echo 'source /usr/share/zsh-antigen/antigen.zsh' >> ~/.zshrc && \
 FROM base AS app
 
 # Copy the package source code to the working directory.
-COPY --chown=app:app . .
+COPY --chown=user:user . .
 
 # Expose the application.
-ENTRYPOINT ["/opt/app-env/bin/poe"]
+ENTRYPOINT ["/opt/my-package-env/bin/poe"]
 CMD ["serve"]

@@ -10,7 +10,7 @@ To add and install this package as a dependency of your project, run `poetry add
 
 To view this app's CLI commands once it's installed, run `my-package --help`.
 
-To serve this app, run `docker compose up app` and open [localhost:8000](http://localhost:8000) in your browser. Within the Dev Container, this is equivalent to running `poe serve`.
+To serve this REST API, run `docker compose up app` and open [localhost:8000](http://localhost:8000) in your browser. Within the Dev Container, this is equivalent to running `poe api`.
 
 ## Contributing
 
@@ -40,7 +40,7 @@ To serve this app, run `docker compose up app` and open [localhost:8000](http://
             export GID=$(id --group)
             EOF
             ```
-1. [Install VS Code](https://code.visualstudio.com/) and [VS Code's Remote-Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers). Alternatively, install [PyCharm](https://www.jetbrains.com/pycharm/download/).
+1. [Install VS Code](https://code.visualstudio.com/) and [VS Code's Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers). Alternatively, install [PyCharm](https://www.jetbrains.com/pycharm/download/).
     - _Optional:_ install a [Nerd Font](https://www.nerdfonts.com/font-downloads) such as [FiraCode Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode) and [configure VS Code](https://github.com/tonsky/FiraCode/wiki/VS-Code-Instructions) or [configure PyCharm](https://github.com/tonsky/FiraCode/wiki/Intellij-products-instructions) to use it.
 
 </details>
@@ -49,8 +49,8 @@ To serve this app, run `docker compose up app` and open [localhost:8000](http://
 <summary>One-time project setup</summary>
 
 1. Clone this repository.
-2. Start a [Dev Container](https://code.visualstudio.com/docs/remote/containers) in your preferred development environment:
-    - _VS Code_: open the cloned repository and run <kbd>Ctrl/⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Remote-Containers: Reopen in Container_.
+2. Start a [Dev Container](https://code.visualstudio.com/docs/devcontainers/containers) in your preferred development environment:
+    - _VS Code_: open the cloned repository and run <kbd>Ctrl/⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Dev Containers: Reopen in Container_.
     - _PyCharm_: open the cloned repository and select the `dev` service when [configuring Docker Compose as a remote interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote).
     - _Terminal_: open the cloned repository and run `docker compose up --detach dev` to start the Dev Container in the background, and then run `docker compose exec dev zsh` to open a shell prompt in the Dev Container.
 
