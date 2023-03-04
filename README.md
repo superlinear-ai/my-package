@@ -6,18 +6,21 @@ An example of a Python package and app that was scaffolded with [Poetry Cookiecu
 
 ## Using
 
-To add and install this package as a dependency of your project, run `poetry add my-package`.
+_Python package_: to add and install this package as a dependency of your project, run `poetry add my-package`.
 
-To view this app's CLI commands once it's installed, run `my-package --help`.
+_Python CLI_: to view this app's CLI commands once it's installed, run `my-package --help`.
 
-To serve this REST API, run `docker compose up app` and open [localhost:8000](http://localhost:8000) in your browser. Within the Dev Container, this is equivalent to running `poe api`.
+_Python application_: to serve this REST API, run `docker compose up app` and open [localhost:8000](http://localhost:8000) in your browser. Within the Dev Container, this is equivalent to running `poe api`.
 
 ## Contributing
 
-### Local development setup
+### Setting up your development environment
 
 <details>
-<summary>One-time device setup</summary>
+<summary>Prerequisites</summary>
+
+<details>
+<summary>1. Set up Git to use SSH</summary>
 
 1. [Generate an SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key) and [add the SSH key to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
 1. Configure SSH to automatically load your SSH keys:
@@ -29,10 +32,16 @@ To serve this REST API, run `docker compose up app` and open [localhost:8000](ht
       UseKeychain yes
     EOF
     ```
+
+</details>
+
+<details>
+<summary>2. Install Docker</summary>
+
 1. [Install Docker Desktop](https://www.docker.com/get-started).
     - Enable _Use Docker Compose V2_ in Docker Desktop's preferences window.
     - _Linux only_:
-        - [Configure Docker and Docker Compose to use the BuildKit build system](https://docs.docker.com/develop/develop-images/build_enhancements/#to-enable-buildkit-builds). On macOS and Windows, BuildKit is enabled by default in Docker Desktop.
+        - [Configure Docker to use the BuildKit build system](https://docs.docker.com/build/buildkit/#getting-started). On macOS and Windows, BuildKit is enabled by default in Docker Desktop.
         - Export your user's user id and group id so that [files created in the Dev Container are owned by your user](https://github.com/moby/moby/issues/3206):
             ```sh
             cat << EOF >> ~/.bashrc
@@ -40,26 +49,31 @@ To serve this REST API, run `docker compose up app` and open [localhost:8000](ht
             export GID=$(id --group)
             EOF
             ```
+
+</details>
+
+<details>
+<summary>3. Install VS Code or PyCharm</summary>
+
 1. [Install VS Code](https://code.visualstudio.com/) and [VS Code's Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers). Alternatively, install [PyCharm](https://www.jetbrains.com/pycharm/download/).
-    - _Optional:_ install a [Nerd Font](https://www.nerdfonts.com/font-downloads) such as [FiraCode Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode) and [configure VS Code](https://github.com/tonsky/FiraCode/wiki/VS-Code-Instructions) or [configure PyCharm](https://github.com/tonsky/FiraCode/wiki/Intellij-products-instructions) to use it.
+2. _Optional:_ install a [Nerd Font](https://www.nerdfonts.com/font-downloads) such as [FiraCode Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode) and [configure VS Code](https://github.com/tonsky/FiraCode/wiki/VS-Code-Instructions) or [configure PyCharm](https://github.com/tonsky/FiraCode/wiki/Intellij-products-instructions) to use it.
+
+</details>
 
 </details>
 
 <details open>
-<summary>One-time project setup</summary>
+<summary>Development environments</summary>
 
-1. Clone this repository.
-2. Start a [Dev Container](https://code.visualstudio.com/docs/devcontainers/containers) in your preferred development environment:
-    - _VS Code_: open the cloned repository and run <kbd>Ctrl/⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Dev Containers: Reopen in Container_.
-    - _PyCharm_: open the cloned repository and select the `dev` service when [configuring Docker Compose as a remote interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote).
-    - _Terminal_: open the cloned repository and run `docker compose up --detach dev` to start the Dev Container in the background, and then run `docker compose exec dev zsh` to open a shell prompt in the Dev Container.
+The following development environments are supported:
+
+1. ⭐️ _GitHub Codespaces_: click on _Code_ and select _Create codespace_ to start a Dev Container with [GitHub Codespaces](https://github.com/features/codespaces).
+1. ⭐️ _Dev Container (with container volume)_: click on [Open in Dev Containers]((https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/radix-ai/my-package)) to clone this repository in a container volume and create a Dev Container with VS Code.
+1. _Dev Container_: clone this repository, open it with VS Code, and run <kbd>Ctrl/⌘</kbd> + <kbd>⇧</kbd> + <kbd>P</kbd> → _Dev Containers: Reopen in Container_.
+1. _PyCharm_: clone this repository, open it with PyCharm, and [configure Docker Compose as a remote interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote) with the `dev` service.
+1. _Terminal_: clone this repository, open it with your terminal, and run `docker compose up --detach dev` to start a Dev Container in the background, and then run `docker compose exec dev zsh` to open a shell prompt in the Dev Container.
 
 </details>
-
-### Browser development setup
-
-1. Open [https://github.com/radix-ai/my-package](https://github.com/radix-ai/my-package) in your browser.
-2. Click on _Code_ and select _Create codespace_ to start a Dev Container with [GitHub Codespaces](https://github.com/features/codespaces).
 
 ### Developing
 
