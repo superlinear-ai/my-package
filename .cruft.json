@@ -1,6 +1,6 @@
 {
-  "template": "git@github.com:radix-ai/poetry-cookiecutter",
-  "commit": "79aea2b34ab8f301a6058c37d826f12013b8523f",
+  "template": "https://github.com/radix-ai/poetry-cookiecutter",
+  "commit": "d64e0b4fd62de7961b8da9619344ace009926bbc",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -24,7 +24,7 @@
       "private_package_repository_url": "",
       "__package_name_kebab_case": "my-package",
       "__package_name_snake_case": "my_package",
-      "_template": "git@github.com:radix-ai/poetry-cookiecutter"
+      "_template": "https://github.com/radix-ai/poetry-cookiecutter"
     }
   },
   "directory": null
