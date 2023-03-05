@@ -22,10 +22,10 @@ my-package = "my_package.cli:app"
 
 [tool.poetry.dependencies]  # https://python-poetry.org/docs/dependency-specification/
 coloredlogs = "^15.0.1"
-fastapi = { extras = ["all"], version = "^0.88.0" }
+fastapi = { extras = ["all"], version = "^0.92.0" }
 gunicorn = "^20.1.0"
-poethepoet = "^0.17.1"
-pydantic = "^1.10.4"
+poethepoet = "^0.18.1"
+pydantic = "^1.10.5"
 python = "^3.8"
 typer = { extras = ["all"], version = "^0.7.0" }
 uvicorn = { extras = ["standard"], version = "^0.20.0" }
@@ -33,22 +33,22 @@ uvicorn = { extras = ["standard"], version = "^0.20.0" }
 [tool.poetry.group.test.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
 absolufy-imports = "^0.3.1"
 black = "^22.12.0"
-commitizen = "^2.39.1"
-coverage = { extras = ["toml"], version = "^7.0.3" }
-mypy = "^0.991"
-pre-commit = "^2.21.0"
-pytest = "^7.2.0"
+commitizen = "^2.42.1"
+coverage = { extras = ["toml"], version = "^7.2.1" }
+mypy = "^1.0.1"
+pre-commit = "^3.1.1"
+pytest = "^7.2.2"
 pytest-clarity = "^1.0.1"
 pytest-mock = "^3.10.0"
-pytest-xdist = "^3.1.0"
-ruff = "^0.0.223"
+pytest-xdist = "^3.2.0"
+ruff = "^0.0.254"
 safety = "^2.3.5"
 shellcheck-py = "^0.9.0"
 typeguard = "^2.13.3"
 
 [tool.poetry.group.dev.dependencies]  # https://python-poetry.org/docs/master/managing-dependencies/
 cruft = "^2.12.0"
-pdoc = "^12.3.0"
+pdoc = "^13.0.0"
 
 [tool.black]  # https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file
 line-length = 100
@@ -98,7 +98,7 @@ xfail_strict = true
 fix = true
 ignore-init-module-imports = true
 line-length = 100
-select = ["A", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "ERA", "F", "I", "ISC", "N", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "RET", "RUF", "S", "SIM", "T10", "T20", "TID", "UP", "W", "YTT"]
+select = ["A", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "ERA", "F", "G", "I", "INP", "ISC", "N", "NPY", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "S", "SIM", "T10", "T20", "TID", "UP", "W", "YTT"]
 ignore = ["E501", "PGH001", "RET504", "S101"]
 unfixable = ["ERA001", "F401", "F841", "T201", "T203"]
 src = ["src", "tests"]
