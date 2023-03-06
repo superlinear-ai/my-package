@@ -14,8 +14,6 @@ _Python application_: to serve this REST API, run `docker compose up app` and op
 
 ## Contributing
 
-### Setting up your development environment
-
 <details>
 <summary>Prerequisites</summary>
 
@@ -75,7 +73,8 @@ The following development environments are supported:
 
 </details>
 
-### Developing
+<details>
+<summary>Developing</summary>
 
 - This project follows the [Conventional Commits](https://www.conventionalcommits.org/) standard to automate [Semantic Versioning](https://semver.org/) and [Keep A Changelog](https://keepachangelog.com/) with [Commitizen](https://github.com/commitizen-tools/commitizen).
 - Run `poe` from within the development environment to print a list of [Poe the Poet](https://github.com/nat-n/poethepoet) tasks available to run on this project.
