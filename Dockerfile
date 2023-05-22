@@ -9,7 +9,7 @@ ENV PYTHONFAULTHANDLER 1
 ENV PYTHONUNBUFFERED 1
 
 # Install Poetry.
-ENV POETRY_VERSION 1.3.1
+ENV POETRY_VERSION 1.4.2
 RUN --mount=type=cache,target=/root/.cache/pip/ \
     pip install poetry~=$POETRY_VERSION
 
@@ -25,7 +25,7 @@ RUN --mount=type=cache,target=/var/cache/apt/ \
 ARG UID=1000
 ARG GID=$UID
 RUN groupadd --gid $GID user && \
-    useradd --create-home --gid $GID --uid $UID user && \
+    useradd --create-home --gid $GID --uid $UID user --no-log-init && \
     chown user /opt/
 USER user
 
@@ -65,12 +65,12 @@ RUN --mount=type=cache,target=/root/.cache/pypoetry/ \
 
 FROM base as dev
 
-# Install development tools: compilers, curl, git, gpg, ssh, starship, sudo, vim, and zsh.
+# Install development tools: curl, git, gpg, ssh, starship, sudo, vim, and zsh.
 USER root
 RUN --mount=type=cache,target=/var/cache/apt/ \
     --mount=type=cache,target=/var/lib/apt/ \
     apt-get update && \
-    apt-get install --no-install-recommends --yes build-essential curl git gnupg ssh sudo vim zsh && \
+    apt-get install --no-install-recommends --yes curl git gnupg ssh sudo vim zsh && \
     sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- "--yes" && \
     usermod --shell /usr/bin/zsh user && \
     echo 'user ALL=(root) NOPASSWD:ALL' > /etc/sudoers.d/user && chmod 0440 /etc/sudoers.d/user
@@ -87,7 +87,7 @@ RUN mkdir -p /opt/build/poetry/ && cp poetry.lock /opt/build/poetry/ && \
     mkdir -p /opt/build/git/ && cp .git/hooks/commit-msg .git/hooks/pre-commit /opt/build/git/
 
 # Configure the non-root user's shell.
-ENV ANTIDOTE_VERSION 1.8.1
+ENV ANTIDOTE_VERSION 1.8.6
 RUN git clone --branch v$ANTIDOTE_VERSION --depth=1 https://github.com/mattmc3/antidote.git ~/.antidote/ && \
     echo 'zsh-users/zsh-syntax-highlighting' >> ~/.zsh_plugins.txt && \
     echo 'zsh-users/zsh-autosuggestions' >> ~/.zsh_plugins.txt && \

@@ -2,11 +2,10 @@
     "name": "my-package",
     "dockerComposeFile": "../docker-compose.yml",
     "service": "devcontainer",
-    "workspaceFolder": "/workspaces/my-package/",
+    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/",
     "remoteUser": "user",
     "overrideCommand": true,
-    "initializeCommand": ".devcontainer/init",
-    "postStartCommand": "cp --update /opt/build/poetry/poetry.lock /workspaces/my-package/ && mkdir -p /workspaces/my-package/.git/hooks/ && cp --update /opt/build/git/* /workspaces/my-package/.git/hooks/",
+    "postStartCommand": "cp --update /opt/build/poetry/poetry.lock /workspaces/${localWorkspaceFolderBasename}/ && mkdir -p /workspaces/${localWorkspaceFolderBasename}/.git/hooks/ && cp --update /opt/build/git/* /workspaces/${localWorkspaceFolderBasename}/.git/hooks/",
     "customizations": {
         "vscode": {
             "extensions": [

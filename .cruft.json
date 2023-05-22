@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/radix-ai/poetry-cookiecutter",
-  "commit": "9e5572055a98241f97c4d2ae2bfe45fd7cf5c051",
+  "commit": "b955d971fde827c5c90b928aa0d06466b5a23a7a",
   "checkout": null,
   "context": {
     "cookiecutter": {

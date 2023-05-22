@@ -13,7 +13,7 @@ services:
     environment:
       - POETRY_PYPI_TOKEN_PYPI
     volumes:
-      - ${WORKSPACE_SOURCE:-.}:${WORKSPACE_TARGET:-/workspaces/my-package/}
+      - ..:/workspaces
       - command-history-volume:/home/user/.history/
 
   dev:
@@ -51,6 +51,3 @@ services:
 
 volumes:
   command-history-volume:
-  devcontainer-volume:
-    name: ${WORKSPACE_CONTAINER_VOLUME_SOURCE:-not-used-in-bind-mount-workspace}
-    external: ${WORKSPACE_IS_CONTAINER_VOLUME:-false}
