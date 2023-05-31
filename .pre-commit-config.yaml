@@ -51,16 +51,10 @@ repos:
         require_serial: true
         language: system
         stages: [commit-msg]
-      - id: absolufy-imports
-        name: absolufy-imports
-        entry: absolufy-imports
-        require_serial: true
-        language: system
-        types: [python]
       - id: ruff
         name: ruff
         entry: ruff
-        args: ["--fixable=ALL,ERA001,F401,F841,T201,T203"]
+        args: ["--extend-fixable=ERA001,F401,F841,T201,T203"]
         require_serial: true
         language: system
         types: [python]
