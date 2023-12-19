@@ -2,23 +2,14 @@
 ARG PYTHON_VERSION=3.8
 FROM python:$PYTHON_VERSION-slim AS base
 
+# Remove docker-clean so we can keep the apt cache in Docker build cache.
+RUN rm /etc/apt/apt.conf.d/docker-clean
+
 # Configure Python to print tracebacks on crash [1], and to not buffer stdout and stderr [2].
 # [1] https://docs.python.org/3/using/cmdline.html#envvar-PYTHONFAULTHANDLER
 # [2] https://docs.python.org/3/using/cmdline.html#envvar-PYTHONUNBUFFERED
 ENV PYTHONFAULTHANDLER 1
 ENV PYTHONUNBUFFERED 1
-
-# Install Poetry.
-ENV POETRY_VERSION 1.6.1
-RUN --mount=type=cache,target=/root/.cache/pip/ \
-    pip install poetry~=$POETRY_VERSION
-
-# Install compilers that may be required for certain packages or platforms.
-RUN rm /etc/apt/apt.conf.d/docker-clean
-RUN --mount=type=cache,target=/var/cache/apt/ \
-    --mount=type=cache,target=/var/lib/apt/ \
-    apt-get update && \
-    apt-get install --no-install-recommends --yes build-essential
 
 # Create a non-root user and switch to it [1].
 # [1] https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
@@ -30,12 +21,34 @@ RUN groupadd --gid $GID user && \
 USER user
 
 # Create and activate a virtual environment.
-RUN python -m venv /opt/my-package-env
-ENV PATH /opt/my-package-env/bin:$PATH
 ENV VIRTUAL_ENV /opt/my-package-env
+ENV PATH $VIRTUAL_ENV/bin:$PATH
+RUN python -m venv $VIRTUAL_ENV
 
 # Set the working directory.
 WORKDIR /workspaces/my-package/
+
+
+
+FROM base as poetry
+
+USER root
+
+# Install Poetry in separate venv so it doesn't pollute the main venv.
+ENV POETRY_VERSION 1.6.1
+ENV POETRY_VIRTUAL_ENV /opt/poetry-env
+RUN --mount=type=cache,target=/root/.cache/pip/ \
+    python -m venv $POETRY_VIRTUAL_ENV && \
+    $POETRY_VIRTUAL_ENV/bin/pip install poetry~=$POETRY_VERSION && \
+    ln -s $POETRY_VIRTUAL_ENV/bin/poetry /usr/local/bin/poetry
+
+# Install compilers that may be required for certain packages or platforms.
+RUN --mount=type=cache,target=/var/cache/apt/ \
+    --mount=type=cache,target=/var/lib/apt/ \
+    apt-get update && \
+    apt-get install --no-install-recommends --yes build-essential
+
+USER user
 
 # Install the run time Python dependencies in the virtual environment.
 COPY --chown=user:user poetry.lock* pyproject.toml /workspaces/my-package/
@@ -46,24 +59,7 @@ RUN --mount=type=cache,uid=$UID,gid=$GID,target=/home/user/.cache/pypoetry/ \
 
 
 
-FROM base as ci
-
-# Allow CI to run as root.
-USER root
-
-# Install git so we can run pre-commit.
-RUN --mount=type=cache,target=/var/cache/apt/ \
-    --mount=type=cache,target=/var/lib/apt/ \
-    apt-get update && \
-    apt-get install --no-install-recommends --yes git
-
-# Install the CI/CD Python dependencies in the virtual environment.
-RUN --mount=type=cache,target=/root/.cache/pypoetry/ \
-    poetry install --only main,test --no-interaction
-
-
-
-FROM base as dev
+FROM poetry as dev
 
 # Install development tools: curl, git, gpg, ssh, starship, sudo, vim, and zsh.
 USER root
@@ -106,6 +102,9 @@ RUN git clone --branch v$ANTIDOTE_VERSION --depth=1 https://github.com/mattmc3/a
 
 
 FROM base AS app
+
+# Copy the virtual environment from the poetry stage.
+COPY --from=poetry $VIRTUAL_ENV $VIRTUAL_ENV
 
 # Copy the package source code to the working directory.
 COPY --chown=user:user . .
