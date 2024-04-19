@@ -8,15 +8,53 @@ updates:
     commit-message:
       prefix: "ci"
       prefix-development: "ci"
-      include: "scope"
+      include: scope
+    groups:
+      ci-dependencies:
+        patterns:
+          - "*"
   - package-ecosystem: pip
     directory: /
     schedule:
       interval: monthly
     commit-message:
-      prefix: "build"
+      prefix: "chore"
       prefix-development: "build"
-      include: "scope"
+      include: scope
+    versioning-strategy: increase
+    allow:
+      - dependency-type: production
+    groups:
+      runtime-dependencies:
+        patterns:
+          - "*"
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: "chore"
+      prefix-development: "build"
+      include: scope
+    versioning-strategy: increase
+    allow:
+      - dependency-type: development
+    groups:
+      development-dependencies:
+        patterns:
+          - "*"
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: "chore"
+      prefix-development: "build"
+      include: scope
     versioning-strategy: lockfile-only
     allow:
-      - dependency-type: "all"
+      - dependency-type: indirect
+    groups:
+      transitive-dependencies:
+        patterns:
+          - "*"
