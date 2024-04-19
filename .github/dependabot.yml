@@ -24,20 +24,14 @@ updates:
     allow:
       - dependency-type: production
       - dependency-type: development
-      - dependency-type: indirect
+    versioning-strategy: increase
     groups:
       runtime-dependencies:
         dependency-type: production
         patterns:
-          - "*"
-        versioning-strategy: increase
+          - "*"        
       development-dependencies:
         dependency-type: development
         patterns:
           - "*"
         versioning-strategy: increase
-      transitive-dependencies:
-        dependency-type: indirect
-        patterns:
-          - "*"
-        versioning-strategy: lockfile-only
