@@ -21,40 +21,23 @@ updates:
       prefix: "chore"
       prefix-development: "build"
       include: scope
-    versioning-strategy: increase
     allow:
       - dependency-type: production
-    groups:
-      runtime-dependencies:
-        patterns:
-          - "*"
-  - package-ecosystem: pip
-    directory: /
-    schedule:
-      interval: monthly
-    commit-message:
-      prefix: "chore"
-      prefix-development: "build"
-      include: scope
-    versioning-strategy: increase
-    allow:
       - dependency-type: development
-    groups:
-      development-dependencies:
-        patterns:
-          - "*"
-  - package-ecosystem: pip
-    directory: /
-    schedule:
-      interval: monthly
-    commit-message:
-      prefix: "chore"
-      prefix-development: "build"
-      include: scope
-    versioning-strategy: lockfile-only
-    allow:
       - dependency-type: indirect
     groups:
-      transitive-dependencies:
+      runtime-dependencies:
+        dependency-type: production
         patterns:
           - "*"
+        versioning-strategy: increase
+      development-dependencies:
+        dependency-type: development
+        patterns:
+          - "*"
+        versioning-strategy: increase
+      transitive-dependencies:
+        dependency-type: indirect
+        patterns:
+          - "*"
+        versioning-strategy: lockfile-only
