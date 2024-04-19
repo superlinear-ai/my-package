@@ -28,9 +28,5 @@ updates:
     groups:
       runtime-dependencies:
         dependency-type: production
-        patterns:
-          - "*"        
       development-dependencies:
         dependency-type: development
-        patterns:
-          - "*"
